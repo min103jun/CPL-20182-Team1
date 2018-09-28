@@ -1,0 +1,51 @@
+//처음에 UUID를 KeyChain에서 불러오는데 nil이라면 UUID를 생성해서 KeyChain에 저장한다.
+
+//저장 후에 다시 함수를 호출 하면 저장된 값을 리턴한다.
+
+- (NSString*) getUUID
+
+{
+
+    // initialize keychaing item for saving UUID.
+
+    KeychainItemWrapper *wrapper = [[KeychainItemWrapper alloc] initWithIdentifier:@"UUID" accessGroup:nil];
+
+   
+
+    NSString *uuid = [wrapper objectForKey:(__bridge id)(kSecAttrAccount)];
+
+
+
+    if( uuid == nil || uuid.length == 0)
+
+    {
+
+        // if there is not UUID in keychain, make UUID and save it.
+
+        CFUUIDRef uuidRef = CFUUIDCreate(NULL);
+
+        CFStringRef uuidStringRef = CFUUIDCreateString(NULL, uuidRef);
+
+        CFRelease(uuidRef);
+
+        uuid = [NSString stringWithString:(__bridge NSString *) uuidStringRef];
+
+        CFRelease(uuidStringRef);
+
+        
+
+        // save UUID in keychain
+
+        [wrapper setObject:uuid forKey:(__bridge id)(kSecAttrAccount)];
+
+    }
+
+    
+
+    return uuid;
+
+}
+
+
+
+출처: http://reysion.tistory.com/55 [미로의 노트]
