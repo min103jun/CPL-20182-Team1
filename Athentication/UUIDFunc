@@ -46,6 +46,45 @@
 
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////
+KeychainItemWrapper *wrapper = [[KeychainItemWrapper alloc] initWithIdentifier:@"UUID" accessGroup:nil];
 
 
-출처: http://reysion.tistory.com/55 [미로의 노트]
+
+NSString *uuid = [wrapper objectForKey:(__bridge id)(kSecAttrAccount)];
+
+
+
+if( uuid == nil || uuid.length == 0)
+
+{
+
+    // if there is not UUID in keychain, make UUID and save it.
+
+    uuid = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+
+    // save UUID in keychain
+
+    [wrapper setObject:uuid forKey:(__bridge id)(kSecAttrAccount)];
+
+}
+
+NSLog(@"UUID = %@", uuid);
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+- KeychainItemWrapper를 사용하여 데이터를 저장할 때 사용할 수 있는 상수는 아래와 같다.
+
+  (https://developer.apple.com/library/ios/documentation/Security/Reference/keychainservices/index.html)
+
+   1) kSecAttrAccount : Account 정보
+
+   2) kSecAttrLabel : 라벨 정보
+
+   3) kSecAttrDescription : 설명
+
+   4) kSecValueData : Data
+
+
+
