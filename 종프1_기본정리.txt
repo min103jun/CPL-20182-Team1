@@ -1,0 +1,47 @@
+(1) 웹에서 클릭시 앱 실행
+if(navigator.userAgent.toLocaleLowerCase().search("android") > -1)
+	os = "android";
+else
+	os = "ios";
+//안드로이드 앱은 이미 있으니 기존 웹에 android인지 판단하는 코드가 있을 것(기존 앱으로 확인)
+//하지만 아이폰에서 모바일 웹으로 접속하여 클릭하면 다른 반응이 없음
+//ios일 경우에  밑에 (2)를 실행시키도록 수정이 필요.
+<참고 : http://pilot376.tistory.com/18>
+
+(2)custom scheme을 통하여 앱 실행
+var userAgent = navigator.userAgent;
+var visitedAt = (new Date()).getTime(); // 방문 시간
+
+if (userAgent.match(/iPhone|iPad|iPod/)) {
+   setTimeout(
+      function() {
+          if ((new Date()).getTime() - visitedAt < 2000) {
+               location.href = "{마켓 주소}";
+          }
+       }, 500);
+
+   setTimeout(function() { 
+        location.href = "{custom scheme 주소}";
+    }, 0);
+}
+//일정시간이 지나도 앱이 실행이 안되면 깔려있지 않은 것으로 보고 앱스토어로 연결
+//ios는 안드로이드 처럼 뷰 컨트롤러를 실행하는게 아닌 앱 자체를 실행
+//우리가 만든 앱에서 설정값을 저장하는 plist의 파일을 수정해야함
+//URL Types()에서 identifier 값은 패키지명을 넣어준다.
+//안드로이드의 경우는 스키마와 호스트 이름을 각각 지정하여 '스키마://호스트?파라미터'형식
+//ios는 호스트 네임이 빠져서 '스키마://?파라미터'로 보내면 됨
+//그럼 스키마를 오픈할 것인지 묻는다. 이 부분은 웹에 추가해야 할 것.
+//실행이 되었을 때 바로 UUID를 이용한 인증을 하여 보안을 높여야 할 것 같음.
+<참고 : http://g-y-e-o-m.tistory.com/33>
+
+(3) 기존 웹 서버로 접근
+//처음엔 무조건 모바일 웹으로 접근을 할 것임.
+//그럼 (1)과 (2)를 통하여 앱이 실행될 것.
+//하지만 앱에서는 영상이 나와야 함. 이를 위해 웹 서버에 영상을 요청하는 query가 필요.
+//웹서버랑 어떻게 통신을 할 것인가? 기존의 포트를 사용가능한가?
+//포트 사용여부는 다시 협력업체에 물어봐야 할 것 같음.
+//아직 공부중....
+
+**협력업체에 물어봐야 할 것.
+1. scheme는 우리가 만들어야 함. 이후 협력업체에 웹서버에 해당하는 scheme를 실행하도록 요청.
+2. 포트는 기존의 포트로 해야하는지 아님 새로운 포트를 열어야 하는지. 포트번호 물어볼 것.
