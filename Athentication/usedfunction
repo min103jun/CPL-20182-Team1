@@ -1,0 +1,18 @@
+override ViewController: UIViewController {
+            //find if uuid is saved in kechain(in the phone)
+            var uuid: String? = KeychainWrapper.standard.string(forKey: "UUID")
+            //let retrievedString : String? = KeychainWrapper.standard.string(forKey: "UUID")
+            //retrievedString = uuid saved as tag "UUID" return
+            if uuid == nil{ // if uuid is not found, make one and save
+                let newuuid = NSUUID().uuidString // uuid = uuid
+                let saveSuccessful : Bool = KeychainWrapper.standard.set(newuuid, forKey :"UUID") //key name = "UUID"
+                if(saveSuccessful == false){
+                    print("keychain save failed")
+                    //dd
+                }
+                else{
+                    print("keychain save success")
+                    uuid = KeychainWrapper.standard.string(forKey: "UUID")           }
+            }
+            print(uuid!)
+}
