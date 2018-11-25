@@ -1,0 +1,199 @@
+	public class ViewController: UIViewController{
+        
+		override func viewDidLoad(){
+        /*let path = Bundle.main.path(forResource: name, ofType: "mp4")
+        /let url = URL(fileURLWithPath: path!)*. <- play video in phone
+        let url = URL(string: "path") <- play video by url
+        player = AVPlayer(url: url!)
+        //set the url in AVPlayer 'player' to play the video.
+        
+        player.currentItem?.addObserver(self, forKeyPath: "duration", options: [.new, .initial], context: nil)
+        //to check the current location of video, have to add the addObserver in video player.
+        addTimeObserver()
+        //the observer check the current duration each 0.5 second.
+        //and then change the time slider
+        playerLayer = AVPlayerLayer(player: player)
+        //to customize the player, have to do it
+        videoView.layer.addSublayer(playerLayer)
+        //finally apply the overall layer to video view, and then play video.
+    }
+   
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        playerLayer?.frame = videoView.bounds
+        //set the boundary of custom layer as same as video view we set
+    }
+    
+    @IBAction func playPauseButton(_ sender: UIButton) {
+        //if now the video is playing and you click the button,
+        //puase the video and change the text in button to "Play"
+        //on the contrary , same as.
+        if isPlaying{
+            player?.pause()
+            sender.setTitle("Play", for: .normal)
+        }
+        else{
+            player?.play()
+            sender.setTitle("pause", for: .normal)
+        }
+        isPlaying = !isPlaying
+    }
+
+    @IBAction func forwardButton(_ sender: Any) {
+        //the button that set the current video location forward 5 seconds.
+        guard let duration = player.currentItem?.duration else{return}
+        let currentTime = CMTimeGetSeconds(player.currentTime())
+        let newTime = currentTime + 5.0
+        
+        if newTime < CMTimeGetSeconds(duration) - 5.0{
+            let time:CMTime = CMTimeMake(value:Int64(newTime*1000), timescale:Int32(1000))
+            player.seek(to:time)
+            print(time)
+        }
+    }
+   
+    @IBAction func backwardButton(_ sender: Any) {
+        //the button that set the current video location backward 5 seconds
+        let currentTime = CMTimeGetSeconds(player.currentTime())
+        var newTime = currentTime-5.0
+        
+        if newTime < 0{
+            newTime = 0
+        }
+        let time : CMTime = CMTimeMake(value:Int64(newTime*1000), timescale:1000)
+        player.seek(to:time)
+        
+    }
+    
+    override var shouldAutorotate: Bool{
+        //to chagne the property to fix the auto rotation on my mind.
+        //have to do it(how change the property of some class)
+        get{
+            return shouldSupportOrientation
+        }
+        set(status){
+            shouldSupportOrientation = status
+        }
+    }
+
+    @IBAction func rotateButton(_ sender: Any) {
+        //can only change the rotation by this button, not by auto.
+        shouldAutorotate = true
+        //temporarily, set the auto rotate free because it's false then
+        //can't change the rotation anymore.
+        if isLandscape == false{
+            UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
+            UIViewController.attemptRotationToDeviceOrientation()
+            fullScreen()
+        }else{
+            UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+            UIViewController.attemptRotationToDeviceOrientation()
+        }
+        shouldAutorotate = false
+        //refix the auto ratation
+        isLandscape = !isLandscape
+        
+    }
+    
+    func fullScreen(){
+        //if the rotation mode is landscape, the video view extends to boundary of its phone.
+        playerLayer.videoGravity = AVLayerVideoGravity.resize
+        playerLayer.frame = self.view.frame
+        videoView.layer.addSublayer(playerLayer)
+    }
+    
+   //the buttons that change the rate of playing video speed.
+    @IBAction func play10Button(_ sender: Any) {
+        player.rate = 1.0
+    }
+    
+    @IBAction func play12Button(_ sender: Any) {
+        player.rate = 1.2
+    }
+    
+    @IBAction func play15Button(_ sender: Any) {
+        player.rate = 1.5
+    }
+     
+    @IBAction func play20Button(_ sender: Any) {
+        player.rate = 2.0
+    }
+    
+    @IBAction func play30Button(_ sender: Any) {
+        player.rate = 3.0
+    }
+    
+    func addTimeObserver(){
+        let interval = CMTime(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        //set the interval 0.5 second
+        let mainQueue = DispatchQueue.main
+        _ = player.addPeriodicTimeObserver(forInterval: interval, queue: mainQueue, using: { [weak self] time in
+            //each 0.5 second, the observer check the current time.
+            guard let currentItem = self?.player.currentItem else {return}
+            self?.timeSlider.maximumValue = Float(currentItem.duration.seconds)
+            self?.timeSlider.minimumValue = 0
+            self?.timeSlider.value = Float(currentItem.currentTime().seconds)
+            self?.currentTimeLabel.text = self?.getTimeString(from: currentItem.currentTime())
+            //setting the label of time slider.
+            self?.currentTime = self?.player.currentTime()
+            //to update the current location of video to DB
+        })
+    }
+    
+    @IBAction func sliderValueChanged(_ sender: UISlider) {
+        player.seek(to: CMTimeMake(value:Int64(sender.value*1000), timescale:1000))
+        //if move the time slider before or after, seek the time changed
+    }
+
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "duration", let duration = player.currentItem?.duration.seconds, duration > 0.0{
+            self.durationLabel.text = getTimeString(from: player.currentItem!.duration)
+        }
+        //update the length of video to label.
+    }
+    
+    func getTimeString(from time: CMTime)->String{
+        //the method to update the label human-used-time(00:00:00)
+        let totalSeconds = CMTimeGetSeconds(time)
+        let hours = Int(totalSeconds/3600)
+        let minutes = Int(totalSeconds/60) % 60
+        let seconds = Int(totalSeconds.truncatingRemainder(dividingBy: 60))
+        if hours>0{
+            return String(format: "%i:%02i:%02i", arguments: [hours, minutes, seconds])
+        }
+        else{
+            return String(format: "%02i:%02i", arguments: [minutes, seconds])
+        }
+    }
+    
+    override var prefersStatusBarHidden: Bool{
+        //to hide the status bar
+        //have to change the status bar property of phone.
+        //so do it
+        get{
+            if let status = statusBarHidden { return status } else { return false }
+        }
+        set(status) {
+            statusBarHidden = status
+            setNeedsStatusBarAppearanceUpdate()
+        }
+    }
+    
+    
+    @IBAction func transparentButton(_ sender: Any) {
+        //to hide the views like status bar , time slider, buttons and so on.
+        if isHidden == false{
+            timeSilderContaniner.isHidden = true
+            buttonContainer.isHidden = true
+            prefersStatusBarHidden = true
+        }else{
+            timeSilderContaniner.isHidden = false
+            buttonContainer.isHidden = false
+            prefersStatusBarHidden = false
+        }
+        
+        isHidden = !isHidden
+    }
+
+}
