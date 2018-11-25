@@ -1,0 +1,62 @@
+<resources>
+    <string name="app_name">EDUTOPIK PLAYER</string>
+    <string name="host" translatable="false">player</string>
+    <string name="scheme" translatable="false">lecture</string>
+
+    <string name="url_for_end" translatable="false">end_request_url</string>
+
+    <string name="param_name_lecture_number" translatable="false">lecture_number</string>
+    <string name="param_name_lecture_unit" translatable="false">lecture_unit</string>
+    <string name="param_name_lecture_title" translatable="false">lecture_title</string>
+    <string name="param_name_lecture_previous_play_time" translatable="false">lecture_current_play_time</string>
+    <string name="param_name_lecture_previous_play_decision" translatable="false">lecture_continuous_play_decision</string>
+    <string name="lecture_play_continue_yes" translatable="false">Y</string>
+    <string name="lecture_play_continue_no" translatable="false">N</string>
+    <string name="param_name_lecture_video_url_container" translatable="false">video_url</string>
+    <string name="authenfication_url" translatable="false">http://m.edutopik.com/test.asp</string>
+    <string name="unauthenticated_uses">Not Authenticated</string>
+    <string name="request_the_developer">Inquire Developer</string>
+
+    <string name="authentication" translatable="false">authentication</string>
+    <string name="authentication_true" translatable="false">1</string>
+    <string name="authentication_false" translatable="false">0</string>
+
+    <string name="continue_dialog_title">이어보기</string>
+    <string name="continue_dialog_inner_text">지난번 지점부터 이어보시겠습니까?</string>
+    <string name="guide_back_pressed">취소 버튼을 한번 더 누르면 종료됩니다.</string>
+
+
+
+
+    <string name="yes">예</string>
+    <string name="no">아니오</string>
+
+    <string name="now_loading">로딩중입니다..</string>
+    <string name="fatal_error">에러가 발생했습니다. 관리자에게 문의바랍니다.</string>
+
+    <string name="click_page_dialog_title">Sorry.</string>
+    <string name="click_page_dialog_inner_text">This application is for web player.\nStart with view button in website.</string>
+    <string name="confirm">확인</string>
+
+    <string name="server_error">서버 에러</string>
+    <string name="server_error_exit_the_application">앱을 종료합니다.</string>
+    <string name="wrong_access">잘못된 접근입니다.</string>
+
+
+
+
+    <string name="controller_move_backward">3초 앞으로</string>
+    <string name="controller_move_forward">3초 뒤로</string>
+    <string name="controller_play_pause">재생/일시정지</string>
+
+    <string name="play_speed_10">1.0배속</string>
+    <string name="play_speed_12">1.2배속</string>
+    <string name="play_speed_14">1.4배속</string>
+    <string name="play_speed_16">1.6배속</string>
+    <string name="play_speed_18">1.8배속</string>
+    <string name="play_speed_20">2.0배속</string>
+
+    <string name="now_buffering">버퍼링중입니다..</string>
+
+    <string name="description">des</string>
+</resources>
