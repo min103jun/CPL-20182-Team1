@@ -1,4 +1,5 @@
-override ViewController: UIViewController {
+public class ViewController : UIViewController {
+      override viewDidLoad() {
             //find if uuid is saved in kechain(in the phone)
             var uuid: String? = KeychainWrapper.standard.string(forKey: "UUID")
             //let retrievedString : String? = KeychainWrapper.standard.string(forKey: "UUID")
@@ -12,7 +13,8 @@ override ViewController: UIViewController {
                 }
                 else{
                     print("keychain save success")
-                    uuid = KeychainWrapper.standard.string(forKey: "UUID")           }
+                    uuid = KeychainWrapper.standard.string(forKey: "UUID")           
+                }
             }
             print(uuid!)
 }
